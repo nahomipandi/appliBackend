@@ -1,9 +1,9 @@
-import { Controller , Get,Post,Body,Param, Patch} from '@nestjs/common';
+import { Controller,Get, Post ,Body,Param, Patch, Delete} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { createUsersDto}from './dto/create-users.dto';
-// ecoute une requete ver url
+import { User } from './interfaces/user.interfaces';
+import { CreateUserDto } from './dto/create-users.dto';
 
-//localhost:3000/users
+//localhost:3000/users/3
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService:UsersService){}
@@ -12,32 +12,35 @@ export class UsersController {
     @Get(':id')
 
     findOne(@Param('id')id:string){
-        ////console.log('id', id);
+        
+       return this.usersService.findOne(id);
 
-    return this.usersService.findOne(id);
-
+         //tslint:disable-next-line: no-console
+       // console.log('id',id);
     }
-
 
     @Get()
-    findAll():any[] { 
-    return this.usersService.findALL();
+    findAll():User[]{
+        return this.usersService.findAll();
+    }
+
+    @Post()
+    createUser(@Body()newUser:CreateUserDto){
+    
+        //console.log('newUser',newUser);
+    this.usersService.create(newUser);
 
     }
-    @Post()
-    createUsers(@Body()newUsers:createUsersDto){
-        //tslint:disable-next-line:no console
-       console.log('newUsers',newUsers);
-        this.usersService.create(newUsers);
-
-
-    } 
 
     @Patch(':id')
-        updateUsers(@Param('id') id:string, @Body() users: createUsersDto){
-            return this.usersService.update(id,users);
-            
-        }
+    updateUser(@Param('id')id:string, @Body()user:CreateUserDto){
+
+        return this.usersService.update(id,user);
         
-    
+    }
+    @Delete(':id')
+    deleteUser(@Param('id') id: string){
+        return this.usersService.delete(id);
+        
+    }
 }

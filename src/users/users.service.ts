@@ -1,110 +1,105 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Users } from 'src/interfaces/user.interfaces';
-import { createUsersDto} from './dto/create-users.dto';
-import { NotFoundError } from 'rxjs';
-import { userInfo } from 'os';
+import { User } from './interfaces/user.interfaces';
+import { CreateUserDto } from './dto/create-users.dto';
 
 @Injectable()
 export class UsersService {
-    
+     users: User[]=[
+        {
+            id:1,
+            nom:'Marynard',
+            prenom:'john',
+            age:20
+        },
 
 
-    users:Users[]=[
-    {
-        id: 1,
-        nom:' Maynard',
-        prenom:'john',
-        age:20,
-    },
+        {
+            id:2,
+            nom:'nahomi',
+            prenom:'john',
+            age:20
+        },
 
+        {
+            id:3,
+            nom:'jacque',
+            prenom:'jule',
+            age:20
+        },
 
-    {
-        id: 2,
-        nom:' keturah',
-        prenom:'yoann',
-        age:20,
-
-    },
-
-    {
-        id: 3,
-        nom:' jean',
-        prenom:'king',
-        age:20,
-
-    },   
-
-    { 
-         id: 4,
-        nom:' gil',
-        prenom:'jules',
-        age:20,
-    }, 
-    { 
-
-        id: 5,
-        nom:' May',
-        prenom:'angel',
-        age:20,
-    },    
-
-    {
-        id: 6,
-        nom:' medard',
-        prenom:'john',
-        age:20,
-    },
-
-    {
-        id: 7,
-        nom:' pandi',
-        prenom:'nahomi',
-        age:21,
-    },
-
-
+        {
+            id:4,
+            nom:'Marynard',
+            prenom:'john',
+            age:20
+        },
 
     ];
 
+
     findOne(id:string){
-        return this.users.find(users=>users.id===Number(id));
+        return this.users.find(user=>user.id== Number(id));
+        
     }
-
-    findALL():Users[]{
-
+    findAll():User[]{
         return this.users;
-    }
-    create(users:createUsersDto){
-        this.users=[...this.users,users as Users];
 
     }
+    create(user:CreateUserDto){
+        this.users=[...this.users,user ];
+    }
 
-
-    update(id:string,users:Users){
-        //retrieve the users to update
-
-       const usersToUpdate=this.users.find(u => u.id=== +id);
-       if(!usersToUpdate){
-         return new NotFoundException('utilisateur pas trouvé');
-       }
-
+    update(id:string,user:User){
+        //retrieve the code to update
+        const userToUpdate = this.users.find(u => u.id === +id);
+        if(!userToUpdate){
+        return new NotFoundException('users existe pas');
+        }
         //apply to granulary update a single property
-        if(users.nom){
-            usersToUpdate.nom=users.nom;
+        if(user.nom){
+            userToUpdate.nom=user.nom;
+
         }
 
 
-        if(users.prenom){
-            usersToUpdate.prenom=users.prenom;
+        if(user.prenom){
+            userToUpdate.prenom=user.prenom;
+
         }
 
+        if(user.nom){
+            userToUpdate.nom=user.nom;
 
-        if(users.age){
-            usersToUpdate.age=users.age;
+        }
+        if(user.nom){
+            userToUpdate.nom=user.nom;
+
+        }
+         
+        if(user.age){
+            userToUpdate.age=user.age;
+
         }
 
-    const updatedUsers =this.users.map(u=>u.id!== +id ? u :usersToUpdate);
-    this.users=[...updatedUsers];
-      return{updatedUsers:1, users:usersToUpdate};
-    }  
+        const updatedUsers =this.users.map(t=> t.id !==+id ? t:userToUpdate);
+        this.users=[...updatedUsers];
+        return{updatedUser:1, user:userToUpdate};
+
+
+    }
+
+    //filter declare un tableau
+
+    delete(id:string){
+        const nbOfUsersBeforeDelete = this.users.length;
+        this.users=[...this.users.filter(t=>t.id !== + id)];
+        if(this.users.length < nbOfUsersBeforeDelete){
+            return{deletedUsers:1, nbUsers:this.users.length};
+        } else{
+            return{deletedUsers:0,nbUsers:this.users.length};
+
+
+        }
+    }
+   
 }
