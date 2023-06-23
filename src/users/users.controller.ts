@@ -1,46 +1,44 @@
-import { Controller,Get, Post ,Body,Param, Patch, Delete} from '@nestjs/common';
+import { Controller,Get, Post ,Body,Param, Patch, Delete, Put} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './interfaces/user.interfaces';
 import { CreateUserDto } from './dto/create-users.dto';
+import { Observable, from } from 'rxjs';
+import { User } from './interfaces/user entity';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 //localhost:3000/users/3
 @Controller('users')
 export class UsersController {
-    constructor(private readonly usersService:UsersService){}
-
-
-    @Get(':id')
-
-    findOne(@Param('id')id:string){
-        
-       return this.usersService.findOne(id);
-
-         //tslint:disable-next-line: no-console
-       // console.log('id',id);
-    }
-
-    @Get()
-    findAll():User[]{
-        return this.usersService.findAll();
-    }
+    constructor(
+        private readonly usersService:UsersService){}
 
     @Post()
-    createUser(@Body()newUser:CreateUserDto){
-    
-        //console.log('newUser',newUser);
-    this.usersService.create(newUser);
-
-    }
-
-    @Patch(':id')
-    updateUser(@Param('id')id:string, @Body()user:CreateUserDto){
-
-        return this.usersService.update(id,user);
+    create(@Body() user:User): Observable<User>{
+        return this.usersService.createUser(user);
+        
         
     }
+   
+    @Get()
+    findAll():Observable<User[]>{
+        return this.usersService.findAllusers();
+    }
+
+    @Put(':id')
+    update(
+        @Param('id')id:number,
+        @Body() user:User
+    ):Observable<UpdateResult> {
+        return this.usersService.updateUser(id,user);
+        
+    }
+
     @Delete(':id')
-    deleteUser(@Param('id') id: string){
-        return this.usersService.delete(id);
-        
+    
+    delete(@Param('id')id:number):Observable<DeleteResult>{
+        return this.usersService.deleteUser(id);
+
     }
+   
+
+   
 }

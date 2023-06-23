@@ -1,105 +1,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { User } from './interfaces/user.interfaces';
 import { CreateUserDto } from './dto/create-users.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { User } from './interfaces/user entity';
+import { Observable, from } from 'rxjs';
+
 
 @Injectable()
 export class UsersService {
-     users: User[]=[
-        {
-            id:1,
-            nom:'Marynard',
-            prenom:'john',
-            age:20
-        },
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
 
-
-        {
-            id:2,
-            nom:'nahomi',
-            prenom:'john',
-            age:20
-        },
-
-        {
-            id:3,
-            nom:'jacque',
-            prenom:'jule',
-            age:20
-        },
-
-        {
-            id:4,
-            nom:'Marynard',
-            prenom:'john',
-            age:20
-        },
-
-    ];
-
-
-    findOne(id:string){
-        return this.users.find(user=>user.id== Number(id));
-        
-    }
-    findAll():User[]{
-        return this.users;
-
-    }
-    create(user:CreateUserDto){
-        this.users=[...this.users,user ];
-    }
-
-    update(id:string,user:User){
-        //retrieve the code to update
-        const userToUpdate = this.users.find(u => u.id === +id);
-        if(!userToUpdate){
-        return new NotFoundException('users existe pas');
-        }
-        //apply to granulary update a single property
-        if(user.nom){
-            userToUpdate.nom=user.nom;
+        createUser(user:User):Observable<User>{
+            return from( this.usersRepository.save(user));
 
         }
+     
 
-
-        if(user.prenom){
-            userToUpdate.prenom=user.prenom;
-
+        findAllusers():Observable<User[]>{
+            return from(this.usersRepository.find());
+        }
+        updateUser(id:number,user:User):Observable<UpdateResult>{
+            return from(this.usersRepository.update(id,user))
         }
 
-        if(user.nom){
-            userToUpdate.nom=user.nom;
-
+        deleteUser(id:number):Observable<DeleteResult>{
+            return from (this.usersRepository.delete(id));
         }
-        if(user.nom){
-            userToUpdate.nom=user.nom;
-
-        }
-         
-        if(user.age){
-            userToUpdate.age=user.age;
-
-        }
-
-        const updatedUsers =this.users.map(t=> t.id !==+id ? t:userToUpdate);
-        this.users=[...updatedUsers];
-        return{updatedUser:1, user:userToUpdate};
-
-
-    }
-
-    //filter declare un tableau
-
-    delete(id:string){
-        const nbOfUsersBeforeDelete = this.users.length;
-        this.users=[...this.users.filter(t=>t.id !== + id)];
-        if(this.users.length < nbOfUsersBeforeDelete){
-            return{deletedUsers:1, nbUsers:this.users.length};
-        } else{
-            return{deletedUsers:0,nbUsers:this.users.length};
-
-
-        }
-    }
-   
+      
 }
