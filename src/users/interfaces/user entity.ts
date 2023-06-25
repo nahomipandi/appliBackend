@@ -10,6 +10,7 @@ export class User{
     prenom:string;
     @Column()
     age:number;
+    notifications: any;
    
     
 }

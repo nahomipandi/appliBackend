@@ -8,7 +8,7 @@ import { User } from './users/interfaces/user entity';
 import { NotificationModule } from './notification/notification.module';
 import { typeOrmConfig } from './users/config/type orm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
  imports: [UsersModule,
 
@@ -22,7 +22,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     //autoLoadEntities:true,
    //synchronize:true,
   //}),
-  NotificationModule,
+  NotificationModule,EventEmitterModule.forRoot(),
   TypeOrmModule.forRoot(typeOrmConfig),
   TypeOrmModule.forFeature([User]),
     

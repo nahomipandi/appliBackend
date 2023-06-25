@@ -1,4 +1,4 @@
-import { Controller,Get, Post ,Body,Param, Patch, Delete, Put} from '@nestjs/common';
+import { Controller,Get, Post ,Body,Param, Delete, Put, Patch} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-users.dto';
 import { Observable, from } from 'rxjs';
@@ -38,6 +38,17 @@ export class UsersController {
         return this.usersService.deleteUser(id);
 
     }
+
+    //@Patch(':id')
+           //update(@Param('id') id: number, @Body() users:User):Observable<UpdateResult>
+           //{
+              //  return this.usersService.updateUser(id,users);
+            
+            //}
+            
+            
+            
+
    
 
    
